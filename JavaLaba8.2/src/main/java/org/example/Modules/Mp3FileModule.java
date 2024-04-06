@@ -2,6 +2,12 @@ package org.example.Modules;
 
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
+
 @Component
 public class Mp3FileModule implements FileModule{
     String basePath = "C:\\Users\\Informant\\source\\repos\\JavaLaba8.2\\JustDirWithRandomFiles";
@@ -19,7 +25,28 @@ public class Mp3FileModule implements FileModule{
 
     @Override
     public void method1(String path) {
-        System.out.println("Пока здесь ничего нет");
+        File file = new File(basePath+"\\"+path);
+        try {
+            // Команда для выполнения
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("cmd.exe", "/c", "ffmpeg -i "+basePath+"\\"+path);
+            processBuilder.redirectInput(file);
+            processBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);
+            processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+            Process process = processBuilder.start();
+            String res = "";
+            try (BufferedReader reader= new BufferedReader(new InputStreamReader(process.getInputStream()))){
+                for (String line:
+                        reader.lines().collect(Collectors.toList())) {
+                    if (line.contains("format.tags.title")){
+                        res = line.split("=")[1].replace("\"","");
+                    }
+                }
+            }
+            System.out.println(res);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
