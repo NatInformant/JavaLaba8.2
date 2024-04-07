@@ -3,14 +3,9 @@ package org.example.Modules;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
 
 @Component
 public class Mp3FileModule implements FileModule{
@@ -31,7 +26,6 @@ public class Mp3FileModule implements FileModule{
     public void method1(String path) {
         File file = new File(basePath+"\\"+path);
         try {
-            // Загрузка аудиофайла
             AudioFile audioFile = AudioFileIO.read(file);
 
             // Получение названия трека из тегов
@@ -46,7 +40,6 @@ public class Mp3FileModule implements FileModule{
     public void method2(String path) {
         File file = new File(basePath+"\\"+path);
         try {
-            // Загрузка аудиофайла
             AudioFile audioFile = AudioFileIO.read(file);
 
             // Получение длительности трека
@@ -62,7 +55,6 @@ public class Mp3FileModule implements FileModule{
     public void method3(String path) {
         File file = new File(basePath+"\\"+path);
         try {
-            // Загрузка аудиофайла
             AudioFile audioFile = AudioFileIO.read(file);
 
             // Получение исполнителя из тегов

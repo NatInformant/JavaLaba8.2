@@ -36,10 +36,10 @@ public class ImageFileModule implements FileModule{
 
     @Override
     public void method1(String path) {
+        File file = new File(basePath+"\\"+path);
         try {
             // Загрузка изображения
-            File imageFile = new File(basePath+"\\"+path);
-            BufferedImage image = ImageIO.read(imageFile);
+            BufferedImage image = ImageIO.read(file);
 
             // Получение размеров изображения
             int width = image.getWidth();

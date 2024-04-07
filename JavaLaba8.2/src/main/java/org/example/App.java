@@ -15,7 +15,6 @@ import java.util.Scanner;
  *
  */
 @SpringBootApplication(scanBasePackages = "org.example")
-@Component
 public class App 
 {
     private static List<FileModule> fileModules;

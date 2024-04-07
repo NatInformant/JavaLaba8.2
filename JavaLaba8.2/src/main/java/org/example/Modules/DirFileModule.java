@@ -25,7 +25,6 @@ public class DirFileModule implements FileModule {
     public void method1(String path) {
         File directory = new File(basePath + "\\" + path);
 
-
         // Получаем список файлов в каталоге
         File[] files = directory.listFiles();
 
