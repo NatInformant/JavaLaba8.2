@@ -1,5 +1,9 @@
 package org.example.Modules;
 
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -20,42 +24,53 @@ public class Mp3FileModule implements FileModule{
     public void getDesc() {
         System.out.println("Функция номер 1 - выводит название трека из тегов");
         System.out.println("Функция номер 2 - выводит длительность в секундах");
-        System.out.println("Функция номер 3 - подумаю");
+        System.out.println("Функция номер 3 - выводит исполнителя трека из тегов");
     }
 
     @Override
     public void method1(String path) {
         File file = new File(basePath+"\\"+path);
         try {
-            // Команда для выполнения
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("cmd.exe", "/c", "ffmpeg -i "+basePath+"\\"+path);
-            processBuilder.redirectInput(file);
-            processBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);
-            processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
-            Process process = processBuilder.start();
-            String res = "";
-            try (BufferedReader reader= new BufferedReader(new InputStreamReader(process.getInputStream()))){
-                for (String line:
-                        reader.lines().collect(Collectors.toList())) {
-                    if (line.contains("format.tags.title")){
-                        res = line.split("=")[1].replace("\"","");
-                    }
-                }
-            }
-            System.out.println(res);
-        } catch (IOException e) {
+            // Загрузка аудиофайла
+            AudioFile audioFile = AudioFileIO.read(file);
+
+            // Получение названия трека из тегов
+            String title = audioFile.getTag().getFirst(FieldKey.TITLE);;
+            System.out.println("Название трека: " + title);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void method2(String path) {
-        System.out.println("Пока здесь ничего нет");
+        File file = new File(basePath+"\\"+path);
+        try {
+            // Загрузка аудиофайла
+            AudioFile audioFile = AudioFileIO.read(file);
+
+            // Получение длительности трека
+            int durationSeconds = audioFile.getAudioHeader().getTrackLength();
+
+            System.out.println("Длительность трека в секундах: " + durationSeconds);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void method3(String path) {
-        System.out.println("Пока здесь ничего нет");
+        File file = new File(basePath+"\\"+path);
+        try {
+            // Загрузка аудиофайла
+            AudioFile audioFile = AudioFileIO.read(file);
+
+            // Получение исполнителя из тегов
+            String artist = audioFile.getTag().getFirst(FieldKey.ARTIST);;
+
+            System.out.println("Исполнитель: " + artist);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
